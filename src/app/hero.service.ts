@@ -7,6 +7,10 @@ import { Hero } from './hero';
 import { HEROES } from './mock-heroes';
 import { MessageService } from './message.service';
 
+// Angular Universalの導入
+import { Optional, Inject } from '@angular/core';
+import { APP_BASE_HREF } from '@angular/common';
+
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
@@ -19,8 +23,11 @@ export class HeroService {
 
   constructor(
     private http: HttpClient,
-    private messageService: MessageService
-  ) { }
+    private messageService: MessageService,
+    @Optional() @Inject(APP_BASE_HREF) origin: string// Angular Universalの導入
+  ) {
+    this.heroesUrl = `${origin}${this.heroesUrl}`;
+  }
 
   getHeroes(): Observable<Hero[]> {
       this.log('fetched heroes');

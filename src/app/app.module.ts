@@ -13,6 +13,10 @@ import { AppRoutingModule } from './/app-routing.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { HeroSearchComponent } from './hero-search/hero-search.component';
 
+// Angular Universalの導入
+import { PLATFORM_ID, APP_ID, Inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -23,7 +27,8 @@ import { HeroSearchComponent } from './hero-search/hero-search.component';
     HeroSearchComponent
   ],
   imports: [
-    BrowserModule,
+    // Angular Universalの導入
+    BrowserModule.withServerTransition({appId: 'tour-of-heroes'}),
     FormsModule,
     AppRoutingModule,
     HttpClientModule,
@@ -34,4 +39,13 @@ import { HeroSearchComponent } from './hero-search/hero-search.component';
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(APP_ID) private appId: string
+  ) {
+    const platform = isPlatformBrowser(platformId) ? 'in the browser' : 'on the Server';
+    console.log(`Running ${platform} with appId="${appId}"`)
+  }
+}
